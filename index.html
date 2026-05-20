@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Memories of Us</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-dark: #050404;
+  --ivory: #F7F3EE;
+  --rose: #B8907A;
+  --taupe: #9A8A7E;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Jost', sans-serif;
+}
+
+html, body {
+  background-color: var(--bg-dark);
+  color: var(--ivory);
+  font-family: var(--sans);
+  font-weight: 300;
+}
+
+body::-webkit-scrollbar { display: none; }
+body { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Cursor Glow ── */
+#cursor-glow {
+  position: fixed; top: 0; left: 0;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(184,144,122,0.08) 0%, rgba(5,4,4,0) 60%);
+  border-radius: 50%;
+  transform: translate(calc(var(--x) - 300px), calc(var(--y) - 300px));
+  pointer-events: none; z-index: 999;
+  opacity: 0; transition: opacity 1s ease;
+  mix-blend-mode: screen; will-change: transform;
+}
+
+/* ── Cinematic Flares ── */
+#cinematic-flares {
+  position: fixed; top: 0; left: 0;
+  width: 100vw; height: 100vh; object-fit: cover;
+  pointer-events: none; z-index: 3;
+  mix-blend-mode: screen; opacity: 0.45;
+}
+
+/* ── UI Top Bar ── */
+.ui-container {
+  position: fixed; top: 35px; width: 100%; padding: 0 40px;
+  display: flex; justify-content: space-between;
+  z-index: 1000; font-size: 11px; letter-spacing: 0.2em;
+  color: rgba(247,243,238,0.3); pointer-events: none;
+}
+.ui-group { display: flex; gap: 20px; pointer-events: auto; }
+.ui-btn { cursor: pointer; transition: color 0.3s ease, text-shadow 0.3s ease; }
+.ui-btn:hover { color: var(--rose); }
+.ui-btn.active {
+  color: var(--ivory); pointer-events: none;
+  text-shadow: 0 0 10px rgba(247,243,238,0.5);
+}
+
+/* ── 3D Viewport ── */
+#viewport {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  perspective: 1100px; overflow: hidden; z-index: 5;
+}
+#tunnel { position: absolute; width: 100%; height: 100%; transform-style: preserve-3d; }
+
+/* ── Footprints ── */
+.footprint-container {
+  position: absolute; top: 50%; left: 50%;
+  width: 55px; height: 55px;
+  margin-left: -27px; margin-top: 38vh;
+  transform-style: preserve-3d;
+  opacity: 0; visibility: hidden;
+  will-change: transform, opacity;
+}
+.footprint {
+  width: 100%; height: 100%;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23B8907A'><path d='M10 20.5c-1.4 0-2.6-1.3-2.6-2.9 0-1.6 1-3.6 2.6-3.6s2.6 2 2.6 3.6c0 1.6-1.2 2.9-2.6 2.9zm.6-8c-2.3 0-4.4-1.5-5.2-3.8-.4-1.3-.2-3.1.9-4.3 1-1.1 2.8-1.5 4.3-.9 2.3.8 3.8 2.9 3.8 5.2 0 2.2-1.6 3.8-3.8 3.8z'/></svg>");
+  background-size: contain; background-repeat: no-repeat;
+}
+.left-foot  { transform: translateX(-35px) rotateX(75deg); }
+.right-foot { transform: translateX(35px) scaleX(-1) rotateX(75deg); }
+
+/* ── Scene Wrapper ── */
+.z-scene {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity, filter;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transform-style: preserve-3d;
+}
+
+/* ── Typography ── */
+.text-content { text-align: center; max-width: 850px; padding: 0 2rem; pointer-events: auto; }
+.chapter { font-size: 11px; letter-spacing: 0.5em; text-transform: uppercase; color: var(--rose); margin-bottom: 2rem; }
+.title {
+  font-family: var(--serif); font-size: clamp(2.8rem, 6.5vw, 6rem);
+  font-weight: 300; line-height: 1.15; margin-bottom: 1.8rem;
+  color: var(--ivory); text-shadow: 0 10px 40px rgba(0,0,0,0.9);
+}
+.title em { font-style: italic; color: var(--rose); }
+
+.description {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(0.88rem, 1.4vw, 1.15rem);
+  line-height: 2.2;
+  color: rgba(247, 243, 238, 0.55);
+  letter-spacing: 0.055em;
+  max-width: 560px;
+  margin: 0 auto;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
+}
+
+/* ── Media Grid ── */
+.media-grid {
+  display: flex; flex-wrap: wrap;
+  justify-content: center; align-items: center; align-content: center;
+  gap: 24px; width: 85vw; height: 75vh; max-width: 1200px;
+  pointer-events: auto; position: relative; z-index: 2;
+}
+
+.photo-frame {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.5));
+  transition: filter 0.3s ease;
+  --hover-scale: 1;
+  animation: organicFloat var(--float-duration, 6s) ease-in-out infinite alternate;
+  animation-delay: var(--float-delay, 0s);
+  will-change: transform;
+}
+.photo-frame:hover {
+  --hover-scale: 1.08; z-index: 50;
+  filter: drop-shadow(0 25px 55px rgba(0,0,0,0.9)) brightness(1.05);
+}
+.photo-frame img, .photo-frame video {
+  display: block; width: auto; height: auto;
+  max-width: clamp(140px, 20vw, 260px);
+  max-height: clamp(140px, 35vh, 320px);
+  border-radius: 6px; will-change: transform;
+}
+/* ── Scroll Indicator ── */
+.conversation-scene {
+  width: 90vw;
+  max-width: 1450px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  pointer-events: auto;
+}
+
+.dialogue-bubble {
+  width: clamp(265px, 24vw, 340px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  will-change: transform, opacity;
+  animation: organicFloat var(--float-duration, 8s) ease-in-out infinite alternate;
+  animation-delay: var(--float-delay, 0s);
+}
+
+.character-avatar {
+  font-size: 1.15rem;
+  color: var(--rose);
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  opacity: 0.9;
+  text-shadow: 0 0 10px rgba(184,144,122,0.45);
+}
+
+.character-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.2rem, 1.9vw, 1.6rem);
+  color: rgba(247,243,238,0.88);
+  line-height: 1.5;
+  text-shadow: 0 4px 20px rgba(5,4,4,0.95);
+}
+
+.char-r { align-items: flex-start; text-align: left; padding-left: 3vw; }
+.char-k { align-items: flex-end; text-align: right; padding-right: 3vw; }
+
+/* ── Drive Buttons ── */
+.drive-btn {
+  display: none;
+  position: absolute; bottom: 40px; right: 50px;
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ivory);
+  background: rgba(184,144,122,0.08);
+  border: 1px solid rgba(247,243,238,0.15);
+  padding: 11px 22px; border-radius: 30px;
+  text-decoration: none; z-index: 90; pointer-events: none;
+  backdrop-filter: blur(6px);
+  transition: background 0.3s, border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  will-change: transform, opacity;
+}
+.drive-btn:hover {
+  background: rgba(184,144,122,0.25); border-color: var(--rose);
+  transform: translateY(-2px); box-shadow: 0 10px 25px rgba(184,144,122,0.15);
+}
+body.unlocked .drive-btn {
+  display: inline-block;
+  pointer-events: auto;
+}
+
+/* ── Index Overlay ── */
+#index-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(5,4,4,0.98); z-index: 99999;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.5s cubic-bezier(0.25,1,0.5,1);
+  backdrop-filter: blur(15px);
+}
+#index-overlay.active { opacity: 1; pointer-events: auto; }
+#index-close {
+  position: absolute; top: 30px; right: 40px; font-size: 40px;
+  font-family: var(--sans); font-weight: 200; color: var(--ivory);
+  cursor: pointer; transition: color 0.3s; z-index: 100000;
+}
+#index-close:hover { color: var(--rose); }
+.index-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 35px 70px; max-width: 1000px; width: 85%; text-align: left; padding: 2rem;
+}
+@media (max-width: 768px) { .index-grid { grid-template-columns: repeat(2, 1fr); gap: 25px; } }
+.index-item {
+  font-family: var(--serif); font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+  color: var(--taupe); cursor: pointer; list-style: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+.index-item:hover { color: var(--rose); transform: translateX(6px); }
+.index-item span {
+  font-family: var(--sans); font-size: 9px; letter-spacing: 0.15em;
+  text-transform: uppercase; display: block;
+  color: rgba(247,243,238,0.2); margin-bottom: 5px;
+}
+
+.grid-placeholder {
+  width: 180px; height: 130px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(247,243,238,0.2); padding: 1rem; text-align: center;
+  background: rgba(255,255,255,0.02); border-radius: 6px;
+}
+
+/* ── Float Animation ── */
+@keyframes organicFloat {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  100% { transform: translate(var(--float-x, 15px), var(--float-y, -25px)) rotate(var(--float-r, 2deg)); }
+}
+
+/* ── Video Container ── */
+.video-container {
+  width: 65vw; height: 55vh; max-width: 960px;
+  background: #000; box-shadow: 0 30px 100px rgba(0,0,0,0.95);
+  border-radius: 4px; overflow: hidden; position: relative; pointer-events: auto;
+}
+.video-container iframe { width: 100%; height: 100%; border: none; }
+
+/* ── Lightbox ── */
+#lightbox {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(4,3,3,0.96); z-index: 99999;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  backdrop-filter: blur(8px); transition: opacity 0.4s ease;
+}
+#lightbox.active { opacity: 1; pointer-events: auto; }
+#lb-close {
+  position: absolute; top: 30px; right: 40px; font-size: 40px;
+  font-family: var(--sans); font-weight: 200; color: var(--ivory);
+  cursor: pointer; z-index: 100000; transition: color 0.3s;
+}
+#lb-close:hover { color: var(--rose); }
+#lb-content {
+  width: 90vw; height: 90vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 24px;
+}
+#lb-content img, #lb-content video {
+  max-width: 100%; max-height: 72vh;
+  object-fit: contain; box-shadow: 0 0 50px rgba(0,0,0,0.8); border-radius: 4px;
+}
+/* ── Scroll Indicator ── */
+.scroll-indicator {
+  position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+  font-size: 9px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--taupe);
+  display: flex; flex-direction: column; align-items: center; gap: 15px;
+  z-index: 100; transition: opacity 0.6s cubic-bezier(0.25,1,0.5,1);
+}
+.scroll-line { width: 1px; height: 50px; background: linear-gradient(to bottom, var(--rose), transparent); }
+
+/* ── Custom 愛 Cursor ── */
+*:not(#unlock-modal):not(#unlock-modal *):not(#unlock-input) { 
+  cursor: none !important; 
+}
+
+#ai-cursor {
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 100001;
+  font-family: 'Noto Sans SC', var(--serif), serif;
+  font-size: 11px; line-height: 1;
+  color: rgba(247,243,238,0.75);
+  text-shadow: 0 0 8px rgba(184,144,122,0.6);
+  transform: translate(-50%, -50%);
+  transition: font-size 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
+  user-select: none; will-change: transform;
+}
+#ai-cursor.hover-photo {
+  font-size: 16px;
+  color: var(--rose);
+  text-shadow: 0 0 12px rgba(184,144,122,0.9), 0 0 24px rgba(184,144,122,0.4);
+}
+
+#unlock-modal, #unlock-modal *, #unlock-input {
+  cursor: auto !important;
+}
+
+/* ── Distance Counter ── */
+#distance-counter {
+  position: fixed; bottom: 38px; right: 40px;
+  font-family: var(--sans); font-size: 12px; letter-spacing: 0.25em;
+  text-transform: uppercase; color: rgba(247,243,238,0.22);
+  z-index: 1000; pointer-events: none;
+  transition: color 0.6s ease, opacity 0.6s ease;
+  opacity: 0;
+}
+#distance-counter span { color: rgba(184,144,122,0.5); }
+#distance-counter.flash-update { color: rgba(247,243,238,0.55); }
+#distance-counter.flash-update span { color: var(--rose); }
+
+/* ── Travel Dates ── */
+.travel-date {
+  font-family: var(--sans); font-size: 9px;
+  letter-spacing: 0.3em; text-transform: uppercase;
+  color: rgba(184,144,122,0.45);
+  margin-bottom: 1.2rem; margin-top: -1.4rem;
+  display: block;
+}
+
+/* ── Progress Thread ── */
+#progress-thread {
+  position: fixed; top: 0; right: 28px;
+  width: 1px; height: 100vh;
+  background: rgba(247,243,238,0.06);
+  z-index: 1000; pointer-events: none;
+}
+#progress-thread::after {
+  content: '';
+  position: absolute; top: 0; left: 0; width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--rose), rgba(247,243,238,0.4));
+  height: var(--progress, 0%);
+  transition: height 0.1s linear;
+}
+
+/* ── Random Memory Button ── */
+#random-btn {
+  position: relative;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+#random-btn:hover { color: var(--rose); }
+#random-btn.flash {
+  animation: randomFlash 0.6s ease forwards;
+}
+@keyframes randomFlash {
+  0%   { color: var(--ivory); text-shadow: 0 0 0px transparent; }
+  40%  { color: var(--rose);  text-shadow: 0 0 18px rgba(184,144,122,0.9); }
+  100% { color: rgba(247,243,238,0.3); text-shadow: none; }
+}
+
+/* ── Grain Overlay ── */
+body::after {
+  content: '';
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  pointer-events: none; z-index: 99999;
+  opacity: 0.032;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px 180px;
+}
+/* ── Unlock Button ── */
+#global-unlock-btn {
+  background: transparent; border: 1px solid rgba(184,144,122,0.3);
+  color: rgba(247,243,238,0.3); font-family: var(--sans); font-size: 10px;
+  letter-spacing: 0.2em; text-transform: uppercase; padding: 5px 14px;
+  cursor: pointer; transition: all 0.3s ease; border-radius: 20px;
+  display: flex; align-items: center; gap: 5px;
+}
+
+/* ── Unlock Modal ── */
+#unlock-modal {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(5,4,4,0.96); backdrop-filter: blur(15px);
+  z-index: 200000; display: none; align-items: center; justify-content: center;
+}
+#unlock-modal.open { display: flex; }
+.unlock-box {
+  background: #0d0c0c; padding: 3rem;
+  border: 1px solid rgba(184,144,122,0.15);
+  text-align: center; max-width: 400px; width: 90%;
+}
+.unlock-box h3 {
+  font-family: var(--serif); font-size: 1.8rem; font-weight: 300;
+  color: var(--ivory); margin-bottom: 0.5rem;
+}
+.unlock-box p {
+  font-size: 10px; letter-spacing: 0.12em; color: var(--taupe);
+  margin-bottom: 2rem; text-transform: uppercase;
+}
+#unlock-input {
+  width: 100%; background: transparent; border: none;
+  border-bottom: 1px solid rgba(154,138,126,0.4);
+  color: var(--ivory); padding: 0.8rem; text-align: center;
+  font-family: var(--sans); font-size: 1.2rem;
+  margin-bottom: 2rem; outline: none; letter-spacing: 0.3em;
+}
+#unlock-input:focus { border-color: var(--rose); }
+.unlock-actions { display: flex; gap: 1rem; }
+.unlock-actions button {
+  flex: 1; background: transparent;
+  border: 1px solid rgba(154,138,126,0.4);
+  color: var(--ivory); padding: 0.65rem 0;
+  font-family: var(--sans); font-size: 9px;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.3s;
+}
+#unlock-confirm { border-color: var(--rose); color: var(--rose); }
+#unlock-confirm:hover { background: var(--rose); color: var(--bg-dark); }
+#unlock-cancel:hover { border-color: var(--ivory); }
+#unlock-error {
+  display: none; color: #c46666;
+  margin-top: 1.5rem; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+}
+
+/* ══════════════════════════════════════
+   MOBILE RESPONSIVE — all fixes below
+   ══════════════════════════════════════ */
+
+/* Hide custom cursor on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  *:not(#unlock-modal):not(#unlock-modal *):not(#unlock-input) {
+    cursor: auto !important;
+  }
+  #ai-cursor { display: none !important; }
+  #cursor-glow { display: none !important; }
+}
+
+@media (max-width: 768px) {
+
+  /* ── Top bar ── */
+  .ui-container {
+    top: 18px;
+    padding: 0 18px;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+  }
+  .ui-group { gap: 12px; }
+  #global-unlock-btn { font-size: 8px; padding: 4px 10px; }
+
+  /* ── Progress thread ── */
+  #progress-thread { right: 10px; }
+
+  /* ── Distance counter ── */
+  #distance-counter {
+    right: 16px;
+    bottom: 18px;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+  }
+
+  /* ── Scroll indicator ── */
+  .scroll-indicator {
+    bottom: 18px;
+    font-size: 8px;
+    letter-spacing: 0.2em;
+  }
+  .scroll-line { height: 30px; }
+
+  /* ── Typography: text scenes ── */
+  .text-content {
+    max-width: 95vw;
+    padding: 0 1.2rem;
+  }
+  .chapter {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    margin-bottom: 1rem;
+  }
+  .title {
+    font-size: clamp(2rem, 9vw, 3.5rem);
+    line-height: 1.2;
+    margin-bottom: 1.2rem;
+  }
+  .description {
+    font-size: clamp(0.85rem, 3.8vw, 1rem);
+    line-height: 1.9;
+    letter-spacing: 0.03em;
+  }
+  .travel-date {
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.8rem;
+    margin-top: -1rem;
+  }
+
+  /* ── Media grid ── */
+  .media-grid {
+    width: 95vw;
+    height: auto;
+    min-height: 60vh;
+    gap: 12px;
+    padding: 1rem 0;
+  }
+  .photo-frame img,
+  .photo-frame video {
+    max-width: clamp(120px, 38vw, 200px);
+    max-height: clamp(100px, 28vh, 220px);
+  }
+
+  /* ── Conversation / dialogue scenes ── */
+  .conversation-scene {
+    width: 95vw;
+    flex-direction: column;
+    gap: 28px;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+  .dialogue-bubble {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .char-r { align-items: flex-start; text-align: left; }
+  .char-k { align-items: flex-start; text-align: left; }
+  .character-text {
+    font-size: clamp(1.05rem, 4.5vw, 1.4rem);
+  }
+
+  /* ── Video container (YouTube embeds) ── */
+  .video-container {
+    width: 92vw;
+    height: 50vw; /* 16:9 ratio */
+    max-width: unset;
+  }
+
+  /* ── Drive / album button ── */
+  .drive-btn {
+    bottom: 14px;
+    right: 16px;
+    font-size: 8px;
+    padding: 9px 16px;
+    letter-spacing: 0.12em;
+  }
+
+  /* ── Index overlay ── */
+  .index-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 28px;
+    width: 90%;
+    padding: 1rem;
+  }
+  .index-item {
+    font-size: clamp(1.1rem, 5vw, 1.5rem);
+  }
+  #index-close {
+    top: 18px;
+    right: 22px;
+    font-size: 32px;
+  }
+
+  /* ── Lightbox ── */
+  #lb-close {
+    top: 18px;
+    right: 22px;
+    font-size: 32px;
+  }
+  #lb-content img,
+  #lb-content video {
+    max-height: 60vh;
+  }
+  /* ── Unlock modal ── */
+  .unlock-box {
+    padding: 2rem 1.4rem;
+    max-width: 92%;
+  }
+  .unlock-box h3 { font-size: 1.5rem; }
+  #unlock-input { font-size: 1rem; }
+
+  /* ── Intro skip button ── */
+  #intro-skip {
+    bottom: 22px;
+    right: 20px;
+    font-size: 8px;
+    letter-spacing: 0.2em;
+  }
+
+  /* ── Footprints ── */
+  .footprint-container {
+    width: 38px;
+    height: 38px;
+    margin-left: -19px;
+    margin-top: 36vh;
+  }
+}
+
+/* Extra small phones */
+@media (max-width: 400px) {
+  .title { font-size: clamp(1.75rem, 10vw, 2.5rem); }
+  .media-grid { gap: 8px; }
+  .photo-frame img,
+  .photo-frame video {
+    max-width: clamp(100px, 42vw, 165px);
+    max-height: clamp(90px, 24vh, 180px);
+  }
+  .index-grid { gap: 14px 18px; }
+  .conversation-scene { gap: 20px; }
+}
+
+/* ── Intro Video ── */
+#intro-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: #050404; z-index: 999999;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+#intro-overlay.fade-out { opacity: 0; pointer-events: none; }
+#intro-video {
+  width: 100%; height: 100%; object-fit: cover;
+  position: absolute; top: 0; left: 0;
+}
+#intro-skip {
+  position: absolute; bottom: 36px; right: 40px;
+  font-family: var(--sans); font-size: 9px; letter-spacing: 0.3em;
+  text-transform: uppercase; color: rgba(247,243,238,0.3);
+  cursor: none; z-index: 10;
+  transition: color 0.3s ease;
+  animation: fadeInSkip 1s ease 1.5s both;
+}
+#intro-skip:hover { color: rgba(247,243,238,0.7); }
+@keyframes fadeInSkip { from { opacity: 0; } to { opacity: 1; } }
+
+</style>
+</head>
+<body>
+
+<div id="intro-overlay">
+  <video id="intro-video" src="media/videos/intro.mp4" autoplay muted playsinline></video>
+  <span id="intro-skip">Skip ↓</span>
+</div>
+
+<div id="cursor-glow"></div>
+<div id="ai-cursor">愛</div>
+<div id="progress-thread"></div>
+<div id="distance-counter"><span id="dist-km">0</span> km traveled</div>
+
+<audio id="music-track1" loop src="media/audio/track1.mp3"></audio>
+<audio id="music-track2" loop src="media/audio/track2.mp3"></audio>
+
+<video id="cinematic-flares" autoplay loop muted playsinline src="media/videos/flares.mp4"></video>
+
+<div class="ui-container">
+  <div class="ui-group">
+    <span class="ui-btn" id="music-toggle">PLAY SOUNDTRACK</span>
+    <span class="ui-btn" id="index-toggle" data-i18n="nav_index">INDEX</span>
+    <span class="ui-btn" id="random-btn">✦ RANDOM</span>
+  </div>
+  <div class="ui-group" id="lang-switcher">
+    <button id="global-unlock-btn">🔒 ALBUMS</button>
+    <span class="ui-btn active" data-lang="en">EN</span>
+    <span class="ui-btn" data-lang="es">ES</span>
+    <span class="ui-btn" data-lang="zh">中文</span>
+  </div>
+</div>
+
+<div id="index-overlay">
+  <div id="index-close">&times;</div>
+  <ul class="index-grid">
+    <li class="index-item" data-target="vlove"><span>01</span><div data-i18n="nav_vlove">The Video Calls</div></li>
+    <li class="index-item" data-target="hk"><span>02</span><div data-i18n="nav_hk">Hong Kong</div></li>
+    <li class="index-item" data-target="tokyo"><span>03</span><div data-i18n="nav_tokyo">Tokyo</div></li>
+    <li class="index-item" data-target="kamakura"><span>04</span><div data-i18n="nav_kamakura">Kamakura</div></li>
+    <li class="index-item" data-target="hakone"><span>05</span><div data-i18n="nav_hakone">Hakone</div></li>
+    <li class="index-item" data-target="seoul"><span>06</span><div data-i18n="nav_seoul">Seoul</div></li>
+    <li class="index-item" data-target="hanoi"><span>07</span><div data-i18n="nav_hanoi">Hanoi</div></li>
+    <li class="index-item" data-target="sapa"><span>08</span><div data-i18n="nav_sapa">Sapa</div></li>
+    <li class="index-item" data-target="halong"><span>09</span><div data-i18n="nav_halong">Halong Bay</div></li>
+    <li class="index-item" data-target="shanghai"><span>10</span><div data-i18n="nav_shanghai">Shanghai</div></li>
+    <li class="index-item" data-target="suzhou"><span>11</span><div data-i18n="nav_suzhou">Suzhou</div></li>
+    <li class="index-item" data-target="nanjing"><span>12</span><div data-i18n="nav_nanjing">Nanjing</div></li>
+    <li class="index-item" data-target="hangzhou"><span>13</span><div data-i18n="nav_hangzhou">Hangzhou</div></li>
+    <li class="index-item" data-target="foshan"><span>14</span><div data-i18n="nav_foshan">Foshan</div></li>
+    <li class="index-item" data-target="zhuhai"><span>15</span><div data-i18n="nav_zhuhai">Zhuhai</div></li>
+  </ul>
+</div>
+
+<div id="lightbox">
+  <div id="lb-close">&times;</div>
+  <div id="lb-content"></div>
+</div>
+
+<div class="scroll-indicator" id="scroll-hint">
+  <span data-i18n="scroll_hint">Scroll to walk through our memories</span>
+  <div class="scroll-line"></div>
+</div>
+
+<div id="viewport">
+  <div id="tunnel">
+
+    <div class="z-scene">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_prelude">A Relationship Prelude</p>
+        <h1 class="title" data-i18n="title_prelude">The Memories<br>of <em>Us</em></h1>
+        <p class="description" data-i18n="desc_prelude">Every place we've crossed together has become a part of us. Let's always remember what brought us here.</p>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_1">Chapter I</p>
+        <h2 class="title" data-i18n="title_1">Beginnings</h2>
+        <p class="description" data-i18n="desc_1">Before the flights, hotels, and trains, there were hundreds of video calls, shared playlists, and the daily decision of finding each other.</p>
+      </div>
+    </div>
+
+    <div class="z-scene" data-location="vlove">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_1_1">Chapter I.I</p>
+        <span class="travel-date">2025 — 2026</span>
+        <h2 class="title" data-i18n="title_1_1">The Video <em>Calls</em></h2>
+        <p class="description" data-i18n="desc_1_1">Our daily screen time went up by 2 hours. Late nights and early mornings through our screens, trying to close the physical distance, finding ourselves emotionally connected thousands of miles away.</p>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="conversation-scene">
+        <div class="dialogue-bubble char-r">
+          <span class="character-avatar">/|\ ^._.^ /|\</span>
+          <p class="character-text" data-i18n="msg_vlove_1"></p>
+        </div>
+        <div class="dialogue-bubble char-k">
+          <span class="character-avatar">≽^• ˕ • ྀི≼</span>
+          <p class="character-text" data-i18n="msg_vlove_2"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="media-grid">
+        <div class="photo-frame"><img loading="lazy" src="media/images/vc1.webp" alt="Videocall 1"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/vc2.webp" alt="Videocall 2"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/vc3.webp" alt="Videocall 3"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/vc4.webp" alt="Videocall 4"></div>
+        <div class="photo-frame"><video src="media/videos/vcvideo1.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/vc5.webp" alt="Videocall 5"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/vc6.webp" alt="Videocall 6"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/vc7.webp" alt="Videocall 7"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/vc8.webp" alt="Videocall 8"></div>
+      </div>
+      <a href="https://photos.app.goo.gl/BGBZnQ3YrB2M5HV7A" target="_blank" class="drive-btn" data-i18n="btn_album">View Full Album</a>
+    </div>
+
+    <div class="z-scene" data-location="hk">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_1_2">Chapter I.II</p>
+        <span class="travel-date">May 17 – 19, 2025</span>
+        <h2 class="title" data-i18n="title_1_2">Hong Kong</h2>
+        <p class="description" data-i18n="desc_1_2">Our first photobooth, our first kiss, our first time getting lost on a bus and getting our fried potatoes squeezed by the bus door.</p>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="conversation-scene">
+        <div class="dialogue-bubble char-r">
+          <span class="character-avatar">/|\ ^._.^ /|\</span>
+          <p class="character-text" data-i18n="msg_hk_1"></p>
+        </div>
+        <div class="dialogue-bubble char-k">
+          <span class="character-avatar">≽^• ˕ • ྀི≼</span>
+          <p class="character-text" data-i18n="msg_hk_2"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="media-grid">
+        <div class="photo-frame"><video src="media/videos/hkvideo1.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/hk1.webp" alt="Hong Kong 1"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/hk2.webp" alt="Hong Kong 2"></div>
+        <div class="photo-frame"><video src="media/videos/hkvideo2.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/hk3.webp" alt="Hong Kong 3"></div>
+        <div class="photo-frame"><video src="media/videos/hkvideo3.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><video src="media/videos/hkvideo4.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/hk4.webp" alt="Hong Kong 4"></div>
+      </div>
+      <a href="https://photos.app.goo.gl/pkDutFcq9ZgpgMSa9" target="_blank" class="drive-btn" data-i18n="btn_album">View Full Album</a>
+    </div>
+
+    <div class="z-scene">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_2">Chapter II</p>
+        <h2 class="title" data-i18n="title_2">Japan</h2>
+        <p class="description" data-i18n="desc_2">The place where both of our dreams find each other, maybe.</p>
+      </div>
+    </div>
+
+    <div class="z-scene" data-location="tokyo">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_2_1">Chapter II.I</p>
+        <span class="travel-date">Aug 20 – 26, 2025</span>
+        <h2 class="title" data-i18n="title_2_1">Tokyo</h2>
+        <p class="description" data-i18n="desc_2_1">The place I called home, but it really wasn't home without you. The first time I felt you were actually part of my reality, sharing meals, showing you all of my favorite spots.</p>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="conversation-scene">
+        <div class="dialogue-bubble char-r">
+          <span class="character-avatar">/|\ ^._.^ /|\</span>
+          <p class="character-text" data-i18n="msg_tyo_1"></p>
+        </div>
+        <div class="dialogue-bubble char-k">
+          <span class="character-avatar">≽^• ˕ • ྀི≼</span>
+          <p class="character-text" data-i18n="msg_tyo_2"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="media-grid">
+        <div class="photo-frame"><video src="media/videos/tyovideo1.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/tyo1.webp" alt="Tokyo 1"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/tyo2.webp" alt="Tokyo 2"></div>
+        <div class="photo-frame"><video src="media/videos/tyovideo3.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/tyo3.webp" alt="Tokyo 3"></div>
+        <div class="photo-frame"><video src="media/videos/tyovideo4.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><video src="media/videos/tyovideo2.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/tyo4.webp" alt="Tokyo 4"></div>
+      </div>
+      <a href="https://photos.app.goo.gl/cTpbCzoLAiTp678R6" target="_blank" class="drive-btn" data-i18n="btn_album">View Full Album</a>
+    </div>
+
+    <div class="z-scene" data-location="kamakura">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_2_2">Chapter II.II</p>
+        <span class="travel-date">Aug 20 – 26, 2025</span>
+        <h2 class="title" data-i18n="title_2_2">Kamakura</h2>
+        <p class="description" data-i18n="desc_2_2">My first time going to the beach with someone apart from my family (you are family, but you know what I mean).</p>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="conversation-scene">
+        <div class="dialogue-bubble char-r">
+          <span class="character-avatar">/|\ ^._.^ /|\</span>
+          <p class="character-text" data-i18n="msg_km_1"></p>
+        </div>
+        <div class="dialogue-bubble char-k">
+          <span class="character-avatar">≽^• ˕ • ྀི≼</span>
+          <p class="character-text" data-i18n="msg_km_2"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="media-grid">
+        <div class="photo-frame"><video src="media/videos/kmvideo1.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/km1.webp" alt="Kam 1"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/km2.webp" alt="Kam 2"></div>
+        <div class="photo-frame"><video src="media/videos/kmvideo2.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><video src="media/videos/kmvideo3.mp4" loop muted playsinline></video></div>
+      </div>
+      <a href="https://photos.app.goo.gl/D9tevGcGMAQY45918" target="_blank" class="drive-btn" data-i18n="btn_album">View Full Album</a>
+    </div>
+
+    <div class="z-scene" data-location="hakone">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_2_3">Chapter II.III</p>
+        <span class="travel-date">Aug 20 – 26, 2025</span>
+        <h2 class="title" data-i18n="title_2_3">Hakone</h2>
+        <p class="description" data-i18n="desc_2_3">The hottest day in Earth's existence. They almost kept you at the museum (you're <em>art</em>).</p>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="conversation-scene">
+        <div class="dialogue-bubble char-r">
+          <span class="character-avatar">/|\ ^._.^ /|\</span>
+          <p class="character-text" data-i18n="msg_hke_1"></p>
+        </div>
+        <div class="dialogue-bubble char-k">
+          <span class="character-avatar">≽^• ˕ • ྀི≼</span>
+          <p class="character-text" data-i18n="msg_hke_2"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="media-grid">
+        <div class="photo-frame"><img loading="lazy" src="media/images/hke1.webp" alt="Hak 1"></div>
+        <div class="photo-frame"><video src="media/videos/hkevideo1.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><video src="media/videos/hkevideo2.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/hke2.webp" alt="Hak 2"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/hke3.webp" alt="Hak 3"></div>
+        <div class="photo-frame"><video src="media/videos/hkevideo3.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/hke4.webp" alt="Hak 4"></div>
+      </div>
+      <a href="https://photos.app.goo.gl/YUHb61aon4e2f72F9" target="_blank" class="drive-btn" data-i18n="btn_album">View Full Album</a>
+    </div>
+
+    <div class="z-scene" data-location="seoul">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_3">Chapter III</p>
+        <span class="travel-date">Oct 5 – 10, 2025</span>
+        <h2 class="title" data-i18n="title_3">Seoul</h2>
+        <p class="description" data-i18n="desc_3">Where I met "Kanji" for the first time, and she chose the ugliest coffee shop in a place full of the world's most beautiful coffee shops. But it was great.</p>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="conversation-scene">
+        <div class="dialogue-bubble char-r">
+          <span class="character-avatar">/|\ ^._.^ /|\</span>
+          <p class="character-text" data-i18n="msg_sl_1"></p>
+        </div>
+        <div class="dialogue-bubble char-k">
+          <span class="character-avatar">≽^• ˕ • ྀི≼</span>
+          <p class="character-text" data-i18n="msg_sl_2"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="media-grid">
+        <div class="photo-frame"><img loading="lazy" src="media/images/sl2.webp" alt="Seoul 1"></div>
+        <div class="photo-frame"><video src="media/videos/slvideo1.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/sl1.webp" alt="Seoul 2"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/sl4.webp" alt="Seoul 3"></div>
+        <div class="photo-frame"><video src="media/videos/slvideo2.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/sl3.webp" alt="Seoul 3"></div>
+        <div class="photo-frame"><video src="media/videos/slvideo3.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><video src="media/videos/slvideo4.mp4" loop muted playsinline></video></div>
+      </div>
+      <a href="https://photos.app.goo.gl/on2tDannfJYTYeTg9" target="_blank" class="drive-btn" data-i18n="btn_album">View Full Album</a>
+    </div>
+
+    <div class="z-scene">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_4">Chapter IV</p>
+        <h2 class="title" data-i18n="title_4">Vietnam</h2>
+        <p class="description" data-i18n="desc_4">Banh Mi, chaos, a schedule a bit too packed, and our last few days before separating 14,000 kms :("</p>
+      </div>
+    </div>
+
+    <div class="z-scene" data-location="hanoi">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_4_1">Chapter IV.I</p>
+        <span class="travel-date">Dec 8 – 14, 2025</span>
+        <h2 class="title" data-i18n="title_4_1">Hanoi</h2>
+        <p class="description" data-i18n="desc_4_1">The best sandwich we've ever had. She made me eat durian in a very suspicious place; it was great. A lot of sad-face pictures.</p>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="conversation-scene">
+        <div class="dialogue-bubble char-r">
+          <span class="character-avatar">/|\ ^._.^ /|\</span>
+          <p class="character-text" data-i18n="msg_hni_1"></p>
+        </div>
+        <div class="dialogue-bubble char-k">
+          <span class="character-avatar">≽^• ˕ • ྀི≼</span>
+          <p class="character-text" data-i18n="msg_hni_2"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="media-grid">
+        <div class="photo-frame"><img loading="lazy" src="media/images/hni1.webp" alt="Hanoi 1"></div>
+        <div class="photo-frame"><video src="media/videos/hnivideo4.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><video src="media/videos/hnivideo1.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/hni2.webp" alt="Hanoi 2"></div>
+        <div class="photo-frame"><video src="media/video/hnivideo2.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/hni3.webp" alt="Hanoi 3"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/hni4.webp" alt="Hanoi 4"></div>
+        <div class="photo-frame"><video src="media/videos/hnivideo3.mp4" loop muted playsinline></video></div>
+      </div>
+      <a href="https://photos.app.goo.gl/oGkx7NXGWtoPxpdG6" target="_blank" class="drive-btn" data-i18n="btn_album">View Full Album</a>
+    </div>
+
+    <div class="z-scene" data-location="sapa">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_4_2">Chapter IV.II</p>
+        <span class="travel-date">Dec 8 – 14, 2025</span>
+        <h2 class="title" data-i18n="title_4_2">Sapa</h2>
+        <p class="description" data-i18n="desc_4_2">A lot of peeing in a bottle, almost peeing in our pants, but most importantly, beautiful mountains, the best hotel we've been to, and great pictures.</p>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="conversation-scene">
+        <div class="dialogue-bubble char-r">
+          <span class="character-avatar">/|\ ^._.^ /|\</span>
+          <p class="character-text" data-i18n="msg_sp_1"></p>
+        </div>
+        <div class="dialogue-bubble char-k">
+          <span class="character-avatar">≽^• ˕ • ྀི≼</span>
+          <p class="character-text" data-i18n="msg_sp_2"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="media-grid">
+        <div class="photo-frame"><img loading="lazy" src="media/images/sp1.webp" alt="Sapa 1"></div>
+        <div class="photo-frame"><video src="media/videos/spvideo1.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/sp2.webp" alt="Sapa 2"></div>
+        <div class="photo-frame"><video src="media/videos/spvideo2.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><video src="media/videos/spvideo3.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/sp4.webp" alt="Sapa 4"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/sp5.webp" alt="Sapa 5"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/sp6.webp" alt="Sapa 6"></div>
+      </div>
+      <a href="https://photos.app.goo.gl/AWXdXuDeDHC3CR7o8" target="_blank" class="drive-btn" data-i18n="btn_album">View Full Album</a>
+    </div>
+
+    <div class="z-scene" data-location="halong">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_4_3">Chapter IV.III</p>
+        <span class="travel-date">Dec 8 – 14, 2025</span>
+        <h2 class="title" data-i18n="title_4_3">Halong Bay</h2>
+        <p class="description" data-i18n="desc_4_3">We were on a boat, we ate cake, we ate cake (flirty). The first time we danced reggaeton in our private balcony in the middle of the bay. One of my favorite memories with you.</p>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="conversation-scene">
+        <div class="dialogue-bubble char-r">
+          <span class="character-avatar">/|\ ^._.^ /|\</span>
+          <p class="character-text" data-i18n="msg_hlg_1"></p>
+        </div>
+        <div class="dialogue-bubble char-k">
+          <span class="character-avatar">≽^• ˕ • ྀི≼</span>
+          <p class="character-text" data-i18n="msg_hlg_2"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="media-grid">
+        <div class="photo-frame"><img loading="lazy" src="media/images/hlg1.webp" alt="Halong 1"></div>
+        <div class="photo-frame"><video src="media/videos/hlgvideo1.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/hlg2.webp" alt="Halong 2"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/hlg5.webp" alt="Halong 5"></div>
+        <div class="photo-frame"><video src="media/videos/hlgvideo2.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/hlg4.webp" alt="Halong 4"></div>
+        <div class="photo-frame"><video src="media/videos/hlgvideo3.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/hlg6.webp" alt="Halong 6"></div>
+      </div>
+      <a href="https://photos.app.goo.gl/aF63QqWS3M6C7nbHA" target="_blank" class="drive-btn" data-i18n="btn_album">View Full Album</a>
+    </div>
+
+    <div class="z-scene">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_5">Chapter V</p>
+        <h2 class="title" data-i18n="title_5">China</h2>
+        <p class="description" data-i18n="desc_5">Finallyyyyyyy. Spending every day together, being actually part of each other's lives. Seeing the place you grew up in, getting to know you through the places you walk every day.</p>
+      </div>
+    </div>
+
+    <div class="z-scene" data-location="shanghai">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_5_1">Chapter V.I</p>
+        <span class="travel-date">Apr 9 – Jul 6, 2026</span>
+        <h2 class="title" data-i18n="title_5_1">Shanghai</h2>
+        <p class="description" data-i18n="desc_5_1">We kept saying how great it would be to live there. You took me to the crab soup 小笼包, best decision you've ever made.</p>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="conversation-scene">
+        <div class="dialogue-bubble char-r">
+          <span class="character-avatar">/|\ ^._.^ /|\</span>
+          <p class="character-text" data-i18n="msg_sh_1"></p>
+        </div>
+        <div class="dialogue-bubble char-k">
+          <span class="character-avatar">≽^• ˕ • ྀི≼</span>
+          <p class="character-text" data-i18n="msg_sh_2"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="media-grid">
+        <div class="photo-frame"><img loading="lazy" src="media/images/sh1.webp" alt="Sha 1"></div>
+        <div class="photo-frame"><video src="media/videos/shvideo1.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><video src="media/videos/shvideo2.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/sh2.webp" alt="Sha 2"></div>
+        <div class="photo-frame"><video src="media/videos/shvideo3.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/sh3.webp" alt="Sha 3"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/sh4.webp" alt="Sha 4"></div>
+        <div class="photo-frame"><video src="media/videos/shvideo4.mp4" loop muted playsinline></video></div>
+      </div>
+      <a href="https://photos.app.goo.gl/GQx5kpKgRKVaZCKPA" target="_blank" class="drive-btn" data-i18n="btn_album">View Full Album</a>
+    </div>
+
+    <div class="z-scene" data-location="suzhou">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_5_2">Chapter V.II</p>
+        <span class="travel-date">Apr 9 – Jul 6, 2026</span>
+        <h2 class="title" data-i18n="title_5_2">Suzhou</h2>
+        <p class="description" data-i18n="desc_5_2">You looked so pretty every second, you found 3 旗袍 for 100 rmb, now you look like the prettiest girl in the world in 3 different outfits.</p>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="conversation-scene">
+        <div class="dialogue-bubble char-r">
+          <span class="character-avatar">/|\ ^._.^ /|\</span>
+          <p class="character-text" data-i18n="msg_suz_1"></p>
+        </div>
+        <div class="dialogue-bubble char-k">
+          <span class="character-avatar">≽^• ˕ • ྀི≼</span>
+          <p class="character-text" data-i18n="msg_suz_2"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="media-grid">
+        <div class="photo-frame"><video src="media/videos/szovideo1.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/szo1.webp" alt="Suzhou 1"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/szo2.webp" alt="Suzhou 2"></div>
+        <div class="photo-frame"><video src="media/videos/szovideo2.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/szo3.webp" alt="Suzhou 3"></div>
+        <div class="photo-frame"><video src="media/videos/szovideo3.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><video src="media/videos/szovideo4.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/szo4.webp" alt="Suzhou 4"></div>
+      </div>
+      <a href="https://photos.app.goo.gl/5VjtXyrjGPeF4sMr6" target="_blank" class="drive-btn" data-i18n="btn_album">View Full Album</a>
+    </div>
+
+    <div class="z-scene" data-location="nanjing">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_5_3">Chapter V.III</p>
+        <span class="travel-date">Apr 9 – Jul 6, 2026</span>
+        <h2 class="title" data-i18n="title_5_3">Nanjing</h2>
+        <p class="description" data-i18n="desc_5_3">Kenzie's favorite city!</p>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="conversation-scene">
+        <div class="dialogue-bubble char-r">
+          <span class="character-avatar">/|\ ^._.^ /|\</span>
+          <p class="character-text" data-i18n="msg_nan_1"></p>
+        </div>
+        <div class="dialogue-bubble char-k">
+          <span class="character-avatar">≽^• ˕ • ྀི≼</span>
+          <p class="character-text" data-i18n="msg_nan_2"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="media-grid">
+        <div class="photo-frame"><img loading="lazy" src="media/images/nj1.webp" alt="Nanjing 1"></div>
+        <div class="photo-frame"><video src="media/videos/njvideo1.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/nj2.webp" alt="Nanjing 2"></div>
+        <div class="photo-frame"><video src="media/videos/njvideo2.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/nj3.webp" alt="Nanjing 3"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/nj4.webp" alt="Nanjing 4"></div>
+        <div class="photo-frame"><video src="media/videos/njvideo3.mp4" loop muted playsinline></video></div>
+      </div>
+      <a href="https://photos.app.goo.gl/VAX1NdDaswr5WhsK6" target="_blank" class="drive-btn" data-i18n="btn_album">View Full Album</a>
+    </div>
+
+    <div class="z-scene" data-location="hangzhou">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_5_4">Chapter V.IV</p>
+        <span class="travel-date">Apr 9 – Jul 6, 2026</span>
+        <h2 class="title" data-i18n="title_5_4">Hangzhou</h2>
+        <p class="description" data-i18n="desc_5_4">My soul city, I can literally still imagine ourselves walking through the West Lake area every weekend, being best friends with the grandpa in Longjin village, and having the most beautiful apartment ever. Sorry I made you hike unprepared.</p>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="conversation-scene">
+        <div class="dialogue-bubble char-r">
+          <span class="character-avatar">/|\ ^._.^ /|\</span>
+          <p class="character-text" data-i18n="msg_hgz_1"></p>
+        </div>
+        <div class="dialogue-bubble char-k">
+          <span class="character-avatar">≽^• ˕ • ྀི≼</span>
+          <p class="character-text" data-i18n="msg_hgz_2"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="media-grid">
+        <div class="photo-frame"><img loading="lazy" src="media/images/hgz1.webp" alt="Hang 1"></div>
+        <div class="photo-frame"><video src="media/videos/hgzvideo2.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/hgz3.webp" alt="Hang 3"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/hgz2.webp" alt="Hang 2"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/hgz4.webp" alt="Hang 4"></div>
+        <div class="photo-frame"><video src="media/videos/hgzvideo1.mp4" loop muted playsinline></video></div>
+      </div>
+      <a href="https://photos.app.goo.gl/ft8c8VyknusDtjRM7" target="_blank" class="drive-btn" data-i18n="btn_album">View Full Album</a>
+    </div>
+
+    <div class="z-scene" data-location="foshan">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_5_5">Chapter V.V</p>
+        <span class="travel-date">Apr 9 – Jul 6, 2026</span>
+        <h2 class="title" data-i18n="title_5_5">Foshan</h2>
+        <p class="description" data-i18n="desc_5_5">The Kung Fu was meh, the lion dance was incredible, and the uncle at the restaurant loved us. I'm sorry I got mad and looked mad in the pictures :("</p>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="conversation-scene">
+        <div class="dialogue-bubble char-r">
+          <span class="character-avatar">/|\ ^._.^ /|\</span>
+          <p class="character-text" data-i18n="msg_fos_1"></p>
+        </div>
+        <div class="dialogue-bubble char-k">
+          <span class="character-avatar">≽^• ˕ • ྀི≼</span>
+          <p class="character-text" data-i18n="msg_fos_2"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="media-grid">
+        <div class="photo-frame"><img loading="lazy" src="media/images/fos1.webp" alt="Foshan 1"></div>
+        <div class="photo-frame"><video src="media/videos/fosvideo1.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><video src="media/videos/fosvideo2.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/fos2.webp" alt="Foshan 2"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/fos3.webp" alt="Foshan 3"></div>
+        <div class="photo-frame"><video src="media/videos/fosvideo3.mp4" loop playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/fos4.webp" alt="Foshan 4"></div>
+      </div>
+      <a href="https://photos.app.goo.gl/eMCfCKwLezhZxbDh7" target="_blank" class="drive-btn" data-i18n="btn_album">View Full Album</a>
+    </div>
+
+    <div class="z-scene" data-location="zhuhai">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_5_6">Chapter V.VI</p>
+        <span class="travel-date">2025 — present</span>
+        <h2 class="title" data-i18n="title_5_6">Zhuhai: Our (temporary) <em>Sanctuary</em></h2>
+        <p class="description" data-i18n="desc_5_6">We are still experiencing this city, so I don't want to make any conclusions, but I couldn't be more grateful to the city that lets me be with you every day, every second. I can't wait to keep building my life with you.</p>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="conversation-scene">
+        <div class="dialogue-bubble char-r">
+          <span class="character-avatar">/|\ ^._.^ /|\</span>
+          <p class="character-text" data-i18n="msg_home_1"></p>
+        </div>
+        <div class="dialogue-bubble char-k">
+          <span class="character-avatar">≽^• ˕ • ྀི≼</span>
+          <p class="character-text" data-i18n="msg_home_2"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="media-grid">
+        <div class="photo-frame"><video src="media/videos/zhuvideo1.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/zhu1.webp" alt="Zhuhai 1"></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/zhu2.webp" alt="Zhuhai 2"></div>
+        <div class="photo-frame"><video src="media/videos/zhuvideo2.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/zhu3.webp" alt="Zhuhai 3"></div>
+        <div class="photo-frame"><video src="media/videos/zhuvideo3.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><video src="media/videos/zhuvideo4.mp4" loop muted playsinline></video></div>
+        <div class="photo-frame"><img loading="lazy" src="media/images/zhu4.webp" alt="Zhuhai 4"></div>
+      </div>
+      <a href="LINK_DE_GOOGLE_DRIVE" target="_blank" class="drive-btn" data-i18n="btn_album">View Full Album</a>
+    </div>
+
+    <div class="z-scene">
+      <div class="video-container">
+        <div class="grid-placeholder" style="font-size:12px;color:var(--rose);">
+          <span>[ Your Cinematic YouTube Video Journey ]</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="z-scene">
+      <div class="text-content">
+        <p class="chapter" data-i18n="chap_end">The Map Unfolds Forever</p>
+        <h2 class="title" data-i18n="title_end">There are still so many places<br>to <em>discover together</em></h2>
+        <p class="description" data-i18n="desc_end">Happy Anniversary.<br>With all that I am, always.</p>
+      </div>
+    </div>
+
+  </div></div>
+
+<div id="unlock-modal">
+  <div class="unlock-box">
+    <h3>Our Odyssey</h3>
+    <p>Enter the secret key to unlock the full albums</p>
+    <input type="password" id="unlock-input" placeholder="••••••••" autocomplete="off" />
+    <div class="unlock-actions">
+      <button id="unlock-cancel">Cancel</button>
+      <button id="unlock-confirm">Unlock</button>
+    </div>
+    <p id="unlock-error">Incorrect key. The archives remain sealed.</p>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ── Unlock Modal ──────────────────────────────────────────
+  const SECRET     = "kr8888";
+  const modal      = document.getElementById('unlock-modal');
+  const input      = document.getElementById('unlock-input');
+  const confirmBtn = document.getElementById('unlock-confirm');
+  const cancelBtn  = document.getElementById('unlock-cancel');
+  const errorMsg   = document.getElementById('unlock-error');
+  const unlockBtn  = document.getElementById('global-unlock-btn');
+
+  unlockBtn.addEventListener('click', () => {
+    modal.classList.add('open');
+    setTimeout(() => input.focus(), 50);
+  });
+
+  const closeModal = () => {
+    modal.classList.remove('open');
+    errorMsg.style.display = 'none';
+    input.value = '';
+  };
+  cancelBtn.addEventListener('click', closeModal);
+
+  confirmBtn.addEventListener('click', () => {
+    if (input.value === SECRET) {
+      closeModal();
+      document.body.classList.add('unlocked');
+      unlockBtn.innerHTML = '🔓 ALBUMS';
+      unlockBtn.style.color = 'var(--rose)';
+      unlockBtn.style.borderColor = 'rgba(184,144,122,0.6)';
+      unlockBtn.style.pointerEvents = 'none';
+    } else {
+      errorMsg.style.display = 'block';
+      input.value = '';
+      input.focus();
+    }
+  });
+
+  input.addEventListener('keypress', (e) => { if (e.key === 'Enter') confirmBtn.click(); });
+
+  const introOverlay = document.getElementById('intro-overlay');
+  const introVideo   = document.getElementById('intro-video');
+  const introSkip    = document.getElementById('intro-skip');
+  let engineActive = false;
+
+  function dismissIntro() {
+    introOverlay.classList.add('fade-out');
+    setTimeout(() => {
+      introOverlay.remove();
+      engineActive = true;
+      renderOdyssey();
+    }, 850);
+  }
+
+  introVideo.addEventListener('ended', dismissIntro);
+  introSkip.addEventListener('click', dismissIntro);
+
+  introVideo.addEventListener('error', () => setTimeout(dismissIntro, 300));
+  setTimeout(() => { if (introOverlay.parentNode) dismissIntro(); }, 6000);
+
+  // ── Custom 愛 Cursor ──────────────────────────────────────
+  const aiCursor = document.getElementById('ai-cursor');
+  let cursorX = -100, cursorY = -100, rafId = null;
+  function moveCursor() {
+    aiCursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
+    rafId = null;
+  }
+  document.addEventListener('mousemove', (e) => {
+    cursorX = e.clientX; cursorY = e.clientY;
+    if (!rafId && engineActive) rafId = requestAnimationFrame(moveCursor);
+  });
+  document.addEventListener('mouseleave', () => { aiCursor.style.opacity = '0'; });
+  document.addEventListener('mouseenter', () => { aiCursor.style.opacity = '1'; });
+
+  // Hover state
+  document.addEventListener('mouseover', (e) => {
+    const t = e.target;
+    if (t.closest('.photo-frame') || t.tagName === 'IMG' || t.tagName === 'VIDEO') {
+      aiCursor.classList.add('hover-photo');
+    } else {
+      aiCursor.classList.remove('hover-photo');
+    }
+  });
+
+  // ── Distance Counter ──────────────────────────────────────
+  const distCounter = document.getElementById('distance-counter');
+  const distKm      = document.getElementById('dist-km');
+
+  const locationDistances = {
+    vlove: 0,        
+    hk: 0,           
+    tokyo: 2900,     
+    kamakura: 2950,  
+    hakone: 3040,    
+    seoul: 4100,     
+    hanoi: 5600,     
+    sapa: 5930,      
+    halong: 6100,    
+    shanghai: 7600,  
+    suzhou: 7670,    
+    nanjing: 7940,   
+    hangzhou: 8200,  
+    foshan: 9100,    
+    zhuhai: 9230,    
+  };
+
+  let displayedKm = 0, targetKm = 0, kmAnimId = null;
+
+  function animateKm(to) {
+    if (kmAnimId) cancelAnimationFrame(kmAnimId);
+    const start = displayedKm, delta = to - start;
+    if (delta === 0) return;
+    const duration = Math.min(1200, Math.abs(delta) * 0.5);
+    const startTime = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+      const ease = 1 - Math.pow(1 - t, 3);
+      displayedKm = Math.round(start + delta * ease);
+      distKm.textContent = displayedKm.toLocaleString();
+      if (t < 1) kmAnimId = requestAnimationFrame(step);
+      else {
+        displayedKm = to;
+        distKm.textContent = to.toLocaleString();
+      }
+    }
+    kmAnimId = requestAnimationFrame(step);
+  }
+
+  // ── Progress Thread ───────────────────────────────────────
+  const progressThread = document.getElementById('progress-thread');
+
+  // ── Cursor Glow ──────────────────────────────────────────
+  const cursorGlow = document.getElementById('cursor-glow');
+  let cursorVisible = false;
+  document.addEventListener('mousemove', (e) => {
+    if (!engineActive) return;
+    if (!cursorVisible) { cursorGlow.style.opacity = '1'; cursorVisible = true; }
+    cursorGlow.style.setProperty('--x', e.clientX + 'px');
+    cursorGlow.style.setProperty('--y', e.clientY + 'px');
+  });
+
+  // ── Audio ─────────────────────────────────────────────────
+  const tracks      = [document.getElementById('music-track1'), document.getElementById('music-track2')];
+  const musicToggle = document.getElementById('music-toggle');
+  let audioState = 0;
+
+  function updateAudioUI() {
+    if      (audioState === 0) { musicToggle.textContent = 'PLAY SOUNDTRACK'; musicToggle.style.color = ''; }
+    else if (audioState === 1) { musicToggle.textContent = 'TRACK 01';        musicToggle.style.color = 'var(--rose)'; }
+    else                       { musicToggle.textContent = 'TRACK 02';        musicToggle.style.color = 'var(--ivory)'; }
+  }
+
+  musicToggle.addEventListener('click', () => {
+    tracks.forEach(t => t.pause());
+    audioState = (audioState + 1) % 3;
+    if (audioState === 1) tracks[0].play().catch(() => { audioState = 0; updateAudioUI(); });
+    else if (audioState === 2) tracks[1].play().catch(() => { audioState = 0; updateAudioUI(); });
+    updateAudioUI();
+  });
+
+  // ── Index Overlay ────────────────────────────────────────
+  const indexOverlay = document.getElementById('index-overlay');
+  const indexClose   = document.getElementById('index-close');
+
+  document.getElementById('index-toggle').addEventListener('click', () => indexOverlay.classList.add('active'));
+
+  function closeIndex() { indexOverlay.classList.remove('active'); }
+  indexClose.addEventListener('click', closeIndex);
+
+  // ── Random Memory ─────────────────────────────────────────
+  // Only jump to "meaningful" scenes: city titles and photo grids
+  const randomBtn = document.getElementById('random-btn');
+  randomBtn.addEventListener('click', () => {
+    // Build pool after sceneData exists (called lazily on first click if needed)
+    const pool = sceneData.filter(s =>
+      s.el.querySelector('.text-content[class]') || s.isMedia
+    );
+    if (!pool.length) return;
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    window.scrollTo({ top: pick.zTarget, behavior: 'smooth' });
+    // Flash animation
+    randomBtn.classList.remove('flash');
+    void randomBtn.offsetWidth; // reflow to restart animation
+    randomBtn.classList.add('flash');
+    setTimeout(() => randomBtn.classList.remove('flash'), 650);
+  });
+
+  // ── 3D Scene Setup ───────────────────────────────────────
+  const tunnel      = document.getElementById('tunnel');
+  const scenes      = document.querySelectorAll('.z-scene');
+  const scrollHint  = document.getElementById('scroll-hint');
+
+  const footstepSpacing = 250;
+
+  let cumulativeZ = 0;
+  const sceneData = Array.from(scenes).map((scene, index) => {
+    let spacingToNext = 2800;
+
+    const isCurrentTitle = !!scene.querySelector('.text-content') && scene.dataset.location;
+    const isCurrentConversation = !!scene.querySelector('.conversation-scene');
+    const nextScene = scenes[index + 1];
+
+    if (nextScene) {
+      const isNextConversation = !!nextScene.querySelector('.conversation-scene');
+      const isNextMedia = !!nextScene.querySelector('.media-grid, .video-container');
+
+      if (isCurrentTitle && isNextConversation) {
+        spacingToNext = 1400;
+      } else if (isCurrentConversation && isNextMedia) {
+        spacingToNext = 1400;
+      }
+    }
+
+    const data = {
+      el:        scene,
+      videos:    [...scene.querySelectorAll('video')],
+      floatMsgs: [...scene.querySelectorAll('.dialogue-bubble')],
+      driveBtns: [...scene.querySelectorAll('.drive-btn')],
+      isMedia:   !!scene.querySelector('.media-grid, .video-container'),
+      zTarget:   cumulativeZ,
+    };
+
+    cumulativeZ += spacingToNext;
+    return data;
+  });
+
+  const maxScroll = sceneData[sceneData.length - 1].zTarget;
+  document.body.style.height = `${maxScroll + window.innerHeight}px`;
+
+  // ── Index jump navigation ─────────────────────────────────
+  document.querySelectorAll('.index-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const target = document.querySelector(`.z-scene[data-location="${item.dataset.target}"]`);
+      if (target) {
+        closeIndex();
+        const found = sceneData.find(s => s.el === target);
+        if (found) {
+          window.scrollTo({ top: found.zTarget, behavior: 'smooth' });
+        }
+      }
+    });
+  });
+
+  // ── Organic Float Setup ───────────────────────────────────
+  document.querySelectorAll('.photo-frame, .dialogue-bubble, .drive-btn').forEach(el => {
+    const isMsg = el.classList.contains('dialogue-bubble');
+    const isBtn = el.classList.contains('drive-btn');
+    const rangeX   = isMsg ? 35 : (isBtn ? 10 : 24);
+    const rangeY   = isMsg ? 40 : (isBtn ? 8  : 30);
+    const duration = (isMsg ? 8 : (isBtn ? 7 : 5)) + Math.random() * 5;
+    const delay    = -(Math.random() * duration);
+    el.style.setProperty('--float-duration', `${duration}s`);
+    el.style.setProperty('--float-delay',    `${delay}s`);
+    el.style.setProperty('--float-x',        `${-(rangeX / 2) + Math.random() * rangeX}px`);
+    el.style.setProperty('--float-y',        `${-rangeY - Math.random() * (rangeY / 2)}px`);
+    el.style.setProperty('--float-r',        `${isBtn ? (-1 + Math.random() * 2) : (-3 + Math.random() * 6)}deg`);
+  });
+
+  // ── Footprints ──
+  const numFootsteps = Math.floor(maxScroll / footstepSpacing);
+  for (let i = 0; i < numFootsteps; i++) {
+    const cont = document.createElement('div');
+    cont.className = 'footprint-container';
+    const foot = document.createElement('div');
+    foot.className = `footprint ${i % 2 === 0 ? 'right-foot' : 'left-foot'}`;
+    cont.appendChild(foot);
+    cont.dataset.z = -i * footstepSpacing;
+    tunnel.appendChild(cont);
+  }
+
+  const footprintData = Array.from(document.querySelectorAll('.footprint-container')).map(el => ({
+    el,
+    nativeZ: parseFloat(el.dataset.z),
+  }));
+
+  // ── Lightbox ──
+  const lightbox  = document.getElementById('lightbox');
+  const lbContent = document.getElementById('lb-content');
+  const lbClose   = document.getElementById('lb-close');
+
+  document.querySelectorAll('.photo-frame').forEach(frame => {
+    frame.addEventListener('click', () => {
+      lbContent.innerHTML = frame.innerHTML;
+      const lbVideo = lbContent.querySelector('video');
+      if (lbVideo) { lbVideo.muted = false; lbVideo.controls = true; lbVideo.play().catch(() => {}); }
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  function closeLightbox() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+    setTimeout(() => { lbContent.innerHTML = ''; }, 400);
+  }
+  lbClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+
+  // ── Render Loop ──
+  let ticking = false;
+
+  function renderOdyssey() {
+    if (!engineActive) return;
+
+    const scrollY = window.scrollY;
+
+    scrollHint.style.opacity = scrollY > 150 ? '0' : '1';
+
+    // Find the closest scene to current scroll position
+    let currentSceneIndex = 0;
+    let minDiff = Infinity;
+    sceneData.forEach((s, idx) => {
+      const diff = Math.abs(scrollY - s.zTarget);
+      if (diff < minDiff) { minDiff = diff; currentSceneIndex = idx; }
+    });
+
+    // Progress thread
+    const progress = Math.min(1, scrollY / maxScroll);
+    progressThread.style.setProperty('--progress', `${progress * 100}%`);
+
+    // Distance counter
+    const currentEl = sceneData[currentSceneIndex]?.el;
+    if (currentEl) {
+      const loc = currentEl.dataset.location;
+      if (loc && locationDistances[loc] !== undefined) {
+        const km = locationDistances[loc];
+        if (km !== targetKm) {
+          targetKm = km;
+          animateKm(km);
+          distCounter.classList.add('flash-update');
+          setTimeout(() => distCounter.classList.remove('flash-update'), 800);
+        }
+        distCounter.style.opacity = '1';
+      } else if (currentSceneIndex === 0) {
+        distCounter.style.opacity = '0';
+      }
+    }
+
+    // Scene rendering
+    sceneData.forEach(({ el, videos, floatMsgs, driveBtns, isMedia, zTarget }) => {
+      const currentZ = -zTarget + scrollY;
+
+      if (currentZ > 800 || currentZ < -2200) {
+        if (el.style.visibility !== 'hidden') {
+          el.style.opacity    = '0';
+          el.style.visibility = 'hidden';
+          videos.forEach(v => v.pause());
+        }
+        return;
+      }
+
+      if (el.style.visibility !== 'visible') {
+        el.style.visibility = 'visible';
+        videos.forEach(v => v.play().catch(() => {}));
+      }
+
+      el.style.transform = `translate3d(0,0,${currentZ}px)`;
+
+      let opacity = 0, blur = 0;
+      if (currentZ > 350) {
+        opacity = 1 - (currentZ - 350) / 450;
+        blur    = (currentZ - 350) / 12;
+      } else if (currentZ > -450) {
+        opacity = 1;
+      } else {
+        opacity = 1 - Math.abs(currentZ + 450) / 1750;
+        blur    = Math.abs(currentZ + 450) / 70;
+      }
+      el.style.opacity = Math.max(0, Math.min(1, opacity));
+
+      floatMsgs.forEach((msg, mi) => {
+        const targetZ    = mi === 0 ? -150 : 150;
+        const msgOpacity = 1 - Math.abs(currentZ - targetZ) / 500;
+        msg.style.opacity = Math.max(0, Math.min(0.95, msgOpacity));
+      });
+
+      driveBtns.forEach(btn => {
+        let btnOpacity = 1;
+        if      (currentZ > 200)  btnOpacity = 1 - (currentZ - 200) / 400;
+        else if (currentZ < -400) btnOpacity = 1 - Math.abs(currentZ + 400) / 800;
+        btn.style.opacity = Math.max(0, Math.min(1, btnOpacity));
+      });
+
+      el.style.filter = isMedia ? 'none' : `blur(${Math.max(0, Math.min(22, blur))}px)`;
+    });
+
+    // Footprints
+    footprintData.forEach(({ el, nativeZ }) => {
+      const currentZ = nativeZ + scrollY;
+
+      if (currentZ > 500 || currentZ < -1500) {
+        if (el.style.visibility !== 'hidden') { el.style.opacity = '0'; el.style.visibility = 'hidden'; }
+        return;
+      }
+
+      if (el.style.visibility !== 'visible') el.style.visibility = 'visible';
+      el.style.transform = `translate3d(0,0,${currentZ}px)`;
+
+      let footOpacity = 0;
+      if      (currentZ < 0)   footOpacity = 1 - Math.abs(currentZ) / 1000;
+      else if (currentZ < 200) footOpacity = 1;
+      else                     footOpacity = 1 - (currentZ - 200) / 300;
+      el.style.opacity = Math.max(0, Math.min(0.65, footOpacity));
+    });
+
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) { requestAnimationFrame(renderOdyssey); ticking = true; }
+  });
+
+  // ── Translations ──────────────────────────────────────────
+  const translations = {
+    en: {
+      scroll_hint:"Scroll to walk through our memories",nav_index:"INDEX",btn_album:"View Album",
+      chap_prelude:"A Relationship Prelude",title_prelude:"The Memories<br>of <em>Us</em>",desc_prelude:"Every place we've crossed together has become a part of us. Let's always remember what brought us here.",
+      chap_1:"Chapter I",title_1:"Beginnings",desc_1:"Before the flights, hotels, and trains, there were hundreds of video calls, shared playlists, and the daily decision of finding each other.",
+      chap_1_1:"Chapter I.I",title_1_1:"The Video <em>Calls</em>",desc_1_1:"Our daily screen time went up by 2 hours. Late nights and early mornings through our screens, trying to close the physical distance, finding ourselves emotionally connected thousands of miles away.",
+      nav_vlove:"The Video Calls",
+      msg_vlove_1:"The time when my phone became my most important possession, because you were in it.",
+      msg_vlove_2:"FaceTime was the actual bridge between US to be closer. (Apple, you need to see me.)",
+      chap_1_2:"Chapter I.II",title_1_2:"Hong Kong",desc_1_2:"Our first photobooth, our first kiss, our first time getting lost on a bus and getting our fried potatoes squeezed by the bus door.",
+      nav_hk:"Hong Kong",
+      msg_hk_1:"Every time you sigh, you lose money.",
+      msg_hk_2:"This time, it’s us actually being in Wong Kar-Wai’s movie scenes.",
+      chap_2:"Chapter II",title_2:"Japan",desc_2:"The place where both of our dreams find each other, maybe.",
+      chap_2_1:"Chapter II.I",title_2_1:"Tokyo",desc_2_1:"The place I called home, but it really wasn't home without you. The first time I felt you were actually part of my reality, sharing meals, showing you all of my favorite spots.",
+      nav_tokyo:"Tokyo",
+      msg_tyo_1:"Sorry, I made you cry when I destroyed you playing darts",
+      msg_tyo_2:"You were my lifesaver for buying me the best slippers I had in my entire life, at the VERY moment.",
+      chap_2_2:"Chapter II.II",title_2_2:"Kamakura",desc_2_2:"My first time going to the beach with someone apart from my family (you are family, but you know what I mean).",
+      nav_kamakura:"Kamakura",
+      msg_km_1:"My favorite city with my favorite girl",
+      msg_km_2:"I’ll learn my lesson every single time we say that phrase - “Kamakura Lady”. [humble]",
+      chap_2_3:"Chapter II.III",title_2_3:"Hakone",desc_2_3:"The hottest day in Earth's existence. They almost kept you at the museum (you're <em>art</em>).",
+      nav_hakone:"Hakone",
+      msg_hke_1:"I almost melted",
+      msg_hke_2:"The day we tried to be vloggers and had the idea of our own channel.",
+      chap_3:"Chapter III",title_3:"Seoul",desc_3:"Where I met \u201cKanji\u201d for the first time, and she chose the ugliest coffee shop in a place full of the world's most beautiful coffee shops. But it was great.",
+      nav_seoul:"Seoul",
+      msg_sl_1:"Ahhhhh, your name is Kanji, like Japanese kanji",
+      msg_sl_2:"I failed the mission when I pointed to your friend and said “hijueputa,” but at least I was spontaneous.",
+      chap_4:"Chapter IV",title_4:"Vietnam",desc_4:"Banh Mi, chaos, a schedule a bit too packed, and our last few days before separating 14,000 kms :(",
+      chap_4_1:"Chapter IV.I",title_4_1:"Hanoi",desc_4_1:"The best sandwich we've ever had. She made me eat durian in a very suspicious place; it was great. A lot of sad-face pictures.",
+      nav_hanoi:"Hanoi",
+      msg_hni_1:"You were scared of getting scammed, but not of eating durian on the floor, next to a thousand cars.",
+      msg_hni_2:"the first time I got overwhelmed in our travels, but also the first time I knew I’ll be fine as long as I'm with you in any place.",
+      chap_4_2:"Chapter IV.II",title_4_2:"Sapa",desc_4_2:"A lot of peeing in a bottle, almost peeing in our pants, but most importantly, beautiful mountains, the best hotel we've been to, and great pictures.",
+      nav_sapa:"Sapa",
+      msg_sp_1:"I wanted to buy you everything in that store",
+      msg_sp_2:"The first time I slept before you during my favorite movie time :(",
+      chap_4_3:"Chapter IV.III",title_4_3:"Halong Bay",desc_4_3:"We were on a boat, we ate cake, we ate cake (flirty). The first time we danced reggaeton in our private balcony in the middle of the bay. One of my favorite memories with you.",
+      nav_halong:"Halong Bay",
+      msg_hlg_1:"I will copy what you said",
+      msg_hlg_2:"I hope time stopped longer for us that night in Halong.",
+      chap_5:"Chapter V",title_5:"China",desc_5:"Finallyyyyyyy. Spending every day together, being actually part of each other's lives. Seeing the place you grew up in, getting to know you through the places you walk every day.",
+      chap_5_1:"Chapter V.I",title_5_1:"Shanghai",desc_5_1:"We kept saying how great it would be to live there. You took me to the crab soup \u5c0f\u7b3c\u5305, best decision you've ever made.",
+      nav_shanghai:"Shanghai",
+      msg_sh_1:"The day I met the real love of my life….chagee <3",
+      msg_sh_2:"We belonged here, since the first second we arrived.",
+      chap_5_2:"Chapter V.II",title_5_2:"Suzhou",desc_5_2:"You looked so pretty every second, you found 3 \u65d7\u888d for 100 rmb, now you look like the prettiest girl in the world in 3 different outfits.",
+      nav_suzhou:"Suzhou",
+      msg_suz_1:"I hope we can go back to that restaurant you fell in love with",
+      msg_suz_2:"Our story is now part of the Chinese Art.",
+      chap_5_3:"Chapter V.III",title_5_3:"Nanjing",desc_5_3:"Kenzie's favorite city!",
+      nav_nanjing:"Nanjing",
+      msg_nan_1:"okay, this time I actually met the love of my life…the rice wine in that vending machine <3",
+      msg_nan_2:"Nanjing could do better :)",
+      chap_5_4:"Chapter V.IV",title_5_4:"Hangzhou",desc_5_4:"My soul city, I can literally still imagine ourselves walking through the West Lake area every weekend, being best friends with the grandpa in Longjin village, and having the most beautiful apartment ever. Sorry I made you hike unprepared.",
+      nav_hangzhou:"Hangzhou",
+      msg_hgz_1:"just ahhhhhhhhhhhhhhhhhhhhhh, let's move here please",
+      msg_hgz_2:"Adventured too hard in ‘our’ soul city.",
+      chap_5_5:"Chapter V.V",title_5_5:"Foshan",desc_5_5:"The Kung Fu was meh, the lion dance was incredible, and the uncle at the restaurant loved us. I'm sorry I got mad and looked mad in the pictures :(",
+      nav_foshan:"Foshan",
+      msg_fos_1:"again, sorry I got mad",
+      msg_fos_2:"Everybody was Kung Fu fighting!",
+      chap_5_6:"Chapter V.VI",title_5_6:"Zhuhai: Our (temporary) <em>Sanctuary</em>",desc_5_6:"We are still experiencing this city, so I don't want to make any conclusions, but I couldn't be more grateful to the city that lets me be with you every day, every second. I can't wait to keep building my life with you.",
+      nav_zhuhai:"Zhuhai",
+      msg_home_1:"So most definitely, in this and any other life, I would really love just doing laundry and taxes with you",
+      msg_home_2:"We are still waiting for a perfect sky and sun to see the perfect sunset, ifykyk.",
+      chap_end:"The Map Unfolds Forever",title_end:"There are still so many places<br>to <em>discover together</em>",desc_end:"Happy Anniversary.<br>With all that I am, always."
+    },
+    es: {
+      scroll_hint:"Haz scroll para caminar por nuestros recuerdos",nav_index:"ÍNDICE",btn_album:"Ver Álbum",
+      chap_prelude:"Un Preludio de Relación",title_prelude:"Los Recuerdos<br>de <em>Nosotros</em>",desc_prelude:"Cada lugar que hemos cruzado juntos se ha convertido en parte de nosotros. Recordemos siempre lo que nos trajo aquí.",
+      chap_1:"Capítulo I",title_1:"Inicios",desc_1:"Antes de los vuelos, hoteles y trenes, hubo cientos de videollamadas, playlists compartidas y la decisión diaria de encontrarnos.",
+      chap_1_1:"Capítulo I.I",title_1_1:"Las Video <em>Llamadas</em>",desc_1_1:"Nuestro tiempo de pantalla diario aumentó 2 horas. Madrugadas y mañanas de conexión a través de nuestros monitores, intentando acortar la distancia física y encontrándonos emocionalmente unidos a miles de kilómetros.",
+      nav_vlove:"Las Video Llamadas",
+      msg_vlove_1:"Aquella época en la que mi teléfono se convirtió en mi posesión más importante, porque tú estabas en él.",
+      msg_vlove_2:"FaceTime fue el puente real entre nosotros para estar más cerca. (Apple, tienes que vernos).",
+      chap_1_2:"Capítulo I.II",title_1_2:"Hong Kong",desc_1_2:"Nuestro primer fotomatón, nuestro primer beso, nuestra primera vez perdiéndonos en un autobús y terminando con nuestras patatas fritas aplastadas por la puerta.",
+      nav_hk:"Hong Kong",
+      msg_hk_1:"Cada vez que suspiras, pierdes dinero.",
+      msg_hk_2:"Esta vez, realmente somos nosotros dentro de las escenas de una película de Wong Kar-Wai.",
+      chap_2:"Capítulo II",title_2:"Japón",desc_2:"El lugar donde ambos sueños se encuentran, tal vez.",
+      chap_2_1:"Capítulo II.I",title_2_1:"Tokio",desc_2_1:"El lugar al que llamé hogar, pero que realmente no lo era sin ti. La primera vez que sentí que eras parte real de mi realidad, sharing meals, mostrando te todos mis lugares favoritos.",
+      nav_tokyo:"Tokio",
+      msg_tyo_1:"Perdón, te hice llorar cuando te destruí jugando a los dardos.",
+      msg_tyo_2:"Fuiste mi salvavidas al comprarme las mejores pantuflas que he tenido en toda mi vida, en el momento JUSTO.",
+      chap_2_2:"Capítulo II.II",title_2_2:"Kamakura",desc_2_2:"Mi primera vez yendo a la playa con alguien que no fuera de mi familia (tú eres familia, pero ya me preocupe).",
+      nav_kamakura:"Kamakura",
+      msg_km_1:"Mi ciudad favorita con mi chica favorita.",
+      msg_km_2:"Aprenderé la lección cada vez que digamos esa frase: “Kamakura Lady”. [humble]",
+      chap_2_3:"Capítulo II.III",title_2_3:"Hakone",desc_2_3:"El día más caluroso en la existencia de la Tierra. Casi te retienen en el museo (porque eres una obra de <em>arte</em>).",
+      nav_hakone:"Hakone",
+      msg_hke_1:"Casi me derrito.",
+      msg_hke_2:"El día que intentamos ser vloggers y tuvimos la idea de nuestro propio canal.",
+      chap_3:"Capítulo III",title_3:"Seúl",desc_3:"Donde conocí a \u201cKanji\u201d por primera vez, y ella eligió la cafetería más fea en un lugar lleno de las cafeterías más hermosas del mundo. Pero fue genial.",
+      nav_seoul:"Seúl",
+      msg_sl_1:"Ahhhhh, tu nombre es Kanji, como los kanjis japoneses.",
+      msg_sl_2:"Fracasé en la misión cuando señalé a tu amigo y le dije “hijueputa”, pero al menos fui espontánea.",
+      chap_4:"Capítulo IV",title_4:"Vietnam",desc_4:"Banh Mi, caos, un itinerario un poco demasiado apretado y nuestros últimos días juntos antes de separarnos por 14,000 km :(",
+      chap_4_1:"Capítulo IV.I",title_4_1:"Hanói",desc_4_1:"El mejor sándwich que hemos probado jamás. Me hizo comer durian en un sitio muy sospechoso; estuvo genial. Muchas fotos con caras tristes.",
+      nav_hanoi:"Hanói",
+      msg_hni_1:"Tenías miedo de que te estafaran, pero no de comer durian en el suelo, al lado de mil coches.",
+      msg_hni_2:"La primera vez que me sentí abrumada en nuestros viajes, pero también la primera vez que supe que estaré bien mientras esté contigo en cualquier lugar.",
+      chap_4_2:"Capítulo IV.II",title_4_2:"Sapa",desc_4_2:"Mucho orinar en una botella, casi orinándonos encima, pero lo más importante: montañas hermosas, el mejor hotel en el que hemos estado y fotos increíbles.",
+      nav_sapa:"Sapa",
+      msg_sp_1:"Quería comprarte todo lo que había en esa tienda.",
+      msg_sp_2:"La primera vez que me dormí antes que tú durante el momento de mi favorita :(",
+      chap_4_3:"Capítulo IV.III",title_4_3:"Bahía de Halong",desc_4_3:"Estábamos en un barco, comimos tarta, comimos tarta (en plan coqueto). La primera vez que bailamos reggaetón en nuestro balcón privado en mitad de la bahía. Uno de mis recuerdos favoritos contigo.",
+      nav_halong:"Bahía de Halong",
+      msg_hlg_1:"Voy a copiar lo que dijiste.",
+      msg_hlg_2:"Ojalá el tiempo se hubiera detenido más para nosotros esa noche en Halong.",
+      chap_5:"Capítulo V",title_5:"China",desc_5:"Por fiiiiiiin. Pasando cada día juntos, formando parte real de la vida del otro. Viendo el lugar donde creciste, conociéndote a través de las calles que caminas a diario.",
+      chap_5_1:"Capítulo V.I",title_5_1:"Shanghái",desc_5_1:"No dejábamos de repetir lo increíble que sería vivir allí. Me llevaste a probar la sopa de cangrejo \u5c0f\u7b3c\u5305, la mejor decisión que has tomado jamás.",
+      nav_shanghai:"Shanghái",
+      msg_sh_1:"El día que conocí al verdadero amor de mi vida... chagee <3",
+      msg_sh_2:"Pertenecíamos aquí desde el primer segundo en que llegamos.",
+      chap_5_2:"Capítulo V.II",title_5_2:"Suzhou",desc_5_2:"Estabas hermosa a cada segundo, encontraste 3 \u65d7\u888d por 100 rmb; ahora luces como la chica más guapa del mundo en tres conjuntos diferentes.",
+      nav_suzhou:"Suzhou",
+      msg_suz_1:"Espero que podamos volver a ese restaurante del que te enamoraste.",
+      msg_suz_2:"Nuestra historia ahora forma parte del arte chino.",
+      chap_5_3:"Capítulo V.III",title_5_3:"Nanjing",desc_5_3:"¡La ciudad favorita de Kenzie!",
+      nav_nanjing:"Nanjing",
+      msg_nan_1:"Vale, esta vez sí conocí al amor de mi vida... el vino de arroz de esa máquina expendedora <3",
+      msg_nan_2:"Nanjing podría hacerlo mejor :)",
+      chap_5_4:"Capítulo V.IV",title_5_4:"Hangzhou",desc_5_4:"La ciudad de mi alma, literalmente puedo imaginarnos caminando por el área del Lago del Oeste cada fin de semana, haciéndonos mejores amigos del abuelo en la aldea de Longjin y teniendo el apartamento más hermoso de todos. Siento haberte hecho hacer senderismo sin estar preparada.",
+      nav_hangzhou:"Hangzhou",
+      msg_hgz_1:"Simplemente ahhhhhhhhhhhhhhhhhhhhhh, mudémonos aquí por favor.",
+      msg_hgz_2:"Vivimos demasiadas aventuras en 'nuestra' ciudad del alma.",
+      chap_5_5:"Capítulo V.V",title_5_5:"Foshan",desc_5_5:"El Kung Fu no estuvo gran cosa, la danza del león fue increíble y el tío del restaurante nos adoró. Lo siento por haberme enfadado y tener mala cara en las fotos :(",
+      nav_foshan:"Foshan",
+      msg_fos_1:"Otra vez, perdón por haberme enfadado.",
+      msg_fos_2:"¡Todo el mundo estaba peleando Kung Fu!",
+      chap_5_6:"Capítulo V.VI",title_5_6:"Zhuhai: Nuestro <em>Santuario</em> (temporal)",desc_5_6:"Aún estamos viviendo esta ciudad, así que no quiero sacar conclusiones, pero no podría estar más agradecido con el lugar que me permite estar contigo cada día, cada segundo. No puedo esperar para seguir construyendo mi vida a tu lado.",
+      nav_zhuhai:"Zhuhai",
+      msg_home_1:"Así que, definitivamente, en esta y en cualquier otra vida, me encantaría hacer la colada y pagar los impuestos contigo.",
+      msg_home_2:"Todavía estamos esperando un cielo y un sol perfectos para ver el atardecer perfecto, si sabes a lo que me refiero.",
+      chap_end:"El Mapa se Despliega por Siempre",title_end:"Todavía hay tantos lugares<br>por <em>descubrir juntos</em>",desc_end:"Feliz Aniversario.<br>Con todo lo que soy, siempre."
+    },
+    zh: {
+      scroll_hint:"滑动屏幕，走过我们的回忆",nav_index:"目录",btn_album:"查看相册",
+      chap_prelude:"一段恋曲序幕",title_prelude:"<em>我们</em>的<br>独家记忆",desc_prelude:"我们共同走过的每一个地方，都已成为我们的一部分。让我们永远铭记带我们来到这里的每一步。",
+      chap_1:"第一章",title_1:"起点",desc_1:"在那些航班、酒店和列车之前，是数百次视频通话、共享歌单，以及每天坚定走向彼此的决定。",
+      chap_1_1:"第一章 第一节",title_1_1:"视频<em>通话</em>",desc_1_1:"我们每天的屏幕使用时间增加了2小时。透过屏幕度过的深夜与清晨，在相隔数千公里的地方，努力缩短物理距离，让心灵紧紧相依。",
+      nav_vlove:"视频通话",
+      msg_vlove_1:"那时候手机成了我最珍贵的宝贝，因为里面有你。",
+      msg_vlove_2:"FaceTime是让我们更靠近的真正桥梁。（苹果，你真应该来看看我们。）",
+      chap_1_2:"第一章 第二节",title_1_2:"香港",desc_1_2:"我们的大头贴处女秀、初吻、第一次在公交车上迷路，还有炸薯条无情地被公交车门夹住的搞笑瞬间。",
+      nav_hk:"香港",
+      msg_hk_1:"你每次叹气，都在漏财哦。",
+      msg_hk_2:"这一次，真的是我们走进了王家卫的电影画面里。",
+      chap_2:"第二章",title_2:"日本",desc_2:"或许，这就是我们两人的梦想交汇交融的地方。",
+      chap_2_1:"第二章 第一节",title_2_1:"东京",desc_2_1:"那个我曾称之为家的地方，但没有你，它终究不是真正的家。第一次真实感受到你成为了我现实生活的一部分，一起吃饭，带你逛遍我最爱的每一个角落。",
+      nav_tokyo:"东京",
+      msg_tyo_1:"抱歉，玩飞镖把你彻底虐哭的时候让你掉眼泪了。",
+      msg_tyo_2:"在最关键的时刻帮我买了这辈子最舒服的拖鞋，你简直是我最及时的救命恩人。",
+      chap_2_2:"第二章 第二节",title_2_2:"镰仓",desc_2_2:"这是我第一次和家人以外的人去海边（虽然你已经是家人了，但你懂我的意思）。",
+      nav_kamakura:"镰仓",
+      msg_km_1:"和我最爱的女孩在我最爱的城市。",
+      msg_km_2:"每次我们说起“镰仓贵妇”这个词，我都会吸取教训的。[保持谦卑]",
+      chap_2_3:"第二章 第三节",title_2_3:"箱根",desc_2_3:"地球有史以来最热的一天。在博物馆里他们差点把你留下来扣天（因为你本身就是一件<em>艺术品</em>）。",
+      nav_hakone:"箱根",
+      msg_hke_1:"我差点被融化了。",
+      msg_hke_2:"那天我们尝试当vlogger，还兴奋地策划了属于我们俩的频道。",
+      chap_3:"第三章",title_3:"首尔",desc_3:"第一次见到\u201cKanji\u201d的地方。在遍地都是绝美咖啡馆的首尔，她竟然挑了最丑的一家。不过，那段时光真的很棒。",
+      nav_seoul:"首尔",
+      msg_sl_1:"啊——你的名字叫Kanji，就像日本的“汉字”一样。",
+      msg_sl_2:"当我指着你朋友脱口而出“hijueputa”时，我的卧底任务彻底失败了，但至少我很真实随性。",
+      chap_4:"第四章",title_4:"越南",desc_4:"法式面包、兵荒马乱的繁杂、紧凑得喘不过气的行程，以及在被迫跨越14000公里分离前，我们最后的温存时光 :(",
+      chap_4_1:"第四章 第一节",title_4_1:"河内",desc_4_1:"我们吃过最美味的三明治。她带我到一个非常可疑的地方吃榴莲，感觉妙不可言。相册里留下了超多哭丧着脸的离别合影。",
+      nav_hanoi:"河内",
+      msg_hni_1:"你那么怕被骗，却一点都不怕坐在地上、在成千上万的车流旁啃榴莲。",
+      msg_hni_2:"这是我第一次在旅途中感到有些崩溃，但也是第一次我知道，只要能和你在一起，去哪儿我都心安。",
+      chap_4_2:"第四章 第二节",title_4_2:"沙坝",desc_4_2:"一路上演各种用瓶子解决内急、甚至差点尿裤子的囧途，但最重要的是，那里有绝美的山峦、我们住过最棒的酒店，以及定格下的珍贵照片。",
+      nav_sapa:"沙坝",
+      msg_sp_1:"我当时真想把那家店里的所有东西都买给你。",
+      msg_sp_2:"第一次在我最喜欢的电影时间里比你先睡着 :(",
+      chap_4_3:"第四章 第三节",title_4_3:"下龙湾",desc_4_3:"我们在游船上吃着蛋糕，调着情。第一次在海湾中央的私人阳台上跳起雷鬼舞。这是我和你在一起最珍爱的回忆之一。",
+      nav_halong:"下龙湾",
+      msg_hlg_1:"我要复制你说的话。",
+      msg_hlg_2:"我多希望在下龙湾的那天晚上，时间能为我们停留得更久一点。",
+      chap_5:"第五章",title_5:"中国",desc_5:"终于盼到了！！！真正融入彼此的生活，朝夕相处。见到你成长的地方，走过你每天丈量的街道，重新认识最真切的你。",
+      chap_5_1:"第五章 第一节",title_5_1:"上海",desc_5_1:"我们曾无数次感慨要是能住在这里该有多好。你带我去吃了蟹粉\u5c0f\u7b3c\u5305，这绝对是你人生中做过最明智的决定。",
+      nav_shanghai:"上海",
+      msg_sh_1:"遇到我一生挚爱的那天……霸王茶姬 <3",
+      msg_sh_2:"从我们到达的第一秒起，我们就注定属于这里。",
+      chap_5_2:"第五章 第二节",title_5_2:"苏州",desc_5_2:"你每时每刻都那么迷人。你竟然用100块钱淘到了3件\u65d7\u888d，现在你穿着三套不同的衣裳，成了这个世界上最美丽的新娘。",
+      nav_suzhou:"苏州",
+      msg_suz_1:"我希望我们能回到那家让你一见钟情的餐厅。",
+      msg_suz_2:"我们的故事，现在也成为了中国艺术的一部分。",
+      chap_5_3:"第五章 第三节",title_5_3:"南京",desc_5_3:"Kenzie最钟爱的城市！",
+      nav_nanjing:"南京",
+      msg_nan_1:"好吧，这一次我真的遇到了我一生的最爱……那台自动售货机里的米酒 <3",
+      msg_nan_2:"南京本可以做得更好 :)",
+      chap_5_4:"第五章 第四节",title_5_4:"杭州",desc_5_4:"我灵魂安放的城市。我仿佛能真切看到我们每个周末漫步在西湖畔，和龙井村的茶农大爷处成挚友，住进全城最美公寓 the 未来。很抱歉当时让你在毫无准备的情况下陪我爬了山。",
+      nav_hangzhou:"杭州",
+      msg_hgz_1:"就是啊啊啊啊啊啊啊啊啊啊啊啊，我们搬到这里住吧，求你了！",
+      msg_hgz_2:"在“我们”的灵魂城市里玩得太拼、太用力了。",
+      chap_5_5:"第五章 第五节",title_5_5:"佛山",desc_5_5:"功夫表演稍显逊色，但舞狮真的令人叹为观止，餐馆的老板大叔也特别喜欢我们。真的很抱歉我当时闹了脾气，导致照片里的我看起来臭着一张脸 :(",
+      nav_foshan:"佛山",
+      msg_fos_1:"再次说声对不起，我又闹脾气了。",
+      msg_fos_2:"大家都在打功夫！(Everybody was Kung Fu fighting!)",
+      chap_5_6:"第五章 第六节",title_5_6:"珠海：我们的（暂住）<em>避风港</em>",desc_5_6:"我们仍在这座城市创造着现在进行时，所以不想过早下结论。但我无比感激这座城市，让能每分每秒都陪在你的身边。我迫不及待想继续和你编织未来的生活。",
+      nav_zhuhai:"珠海",
+      msg_home_1:"所以毫无疑问，无论在这一生还是在以后的生生世世里，我都只想和你一起洗衣服、一起报税。",
+      msg_home_2:"我们仍在这等一个完美的晴空和太阳，去迎接那场属于我们的完美日落，懂的都懂。",
+      chap_end:"地图将永远延展",title_end:"还有太多地方<br>等待我们<em>共同探索</em>",desc_end:"周年快乐。<br>倾尽我所有，直到永远。"
+    }
+  };
+
+  function setLanguage(lang) {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (translations[lang]?.[key]) el.innerHTML = translations[lang][key];
+    });
+    document.querySelectorAll('.ui-btn[data-lang]').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+    });
+  }
+
+  document.querySelectorAll('.ui-btn[data-lang]').forEach(btn => {
+    btn.addEventListener('click', () => setLanguage(btn.getAttribute('data-lang')));
+  });
+
+  setLanguage('en');
+
+});
+</script>
+
+</body>
+</html>
